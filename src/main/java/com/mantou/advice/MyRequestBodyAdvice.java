@@ -53,7 +53,7 @@ public class MyRequestBodyAdvice implements RequestBodyAdvice {
         Gson gson = new Gson();
         DemoSign demoSign = gson.fromJson(bodyStr, DemoSign.class);
         map.remove("signatureByte");
-        log.info("map:{}",map.toString());
+        log.info("map:{}",map);
         //校验签名
         boolean verifyResult;
         try {
