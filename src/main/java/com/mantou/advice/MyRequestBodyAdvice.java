@@ -1,9 +1,7 @@
 package com.mantou.advice;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.gson.Gson;
 import com.mantou.anno.SignProcess;
-import com.mantou.entity.DemoSign;
 import com.mantou.exception.MyException;
 import com.mantou.utils.JsonUtil;
 import com.mantou.utils.SignUtil;
@@ -17,6 +15,8 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdvice;
+import sun.misc.BASE64Decoder;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,14 +50,20 @@ public class MyRequestBodyAdvice implements RequestBodyAdvice {
         //转换成TreeMap结构
         TreeMap<String,Object> map = JsonUtil.parse(bodyStr, new TypeReference<TreeMap<String, Object>>() {});
         //将字符串转化为Java对象
-        Gson gson = new Gson();
-        DemoSign demoSign = gson.fromJson(bodyStr, DemoSign.class);
-        map.remove("signatureByte");
+//        Gson gson = new Gson();
+//        DemoSign demoSign = gson.fromJson(bodyStr, DemoSign.class);
+        //将编码的数字签名取出
+        String signature = (String)map.get("signature");
+        log.info("请求携带的数字签名:{}",signature);
+        byte[] signatureByte = new BASE64Decoder().decodeBuffer(signature);
+        //将数字签名去掉
+        map.remove("signature");
         log.info("map:{}",map);
+
         //校验签名
         boolean verifyResult;
         try {
-            verifyResult = SignUtil.verify(map.toString(), demoSign.getSignatureByte(), PUBLIC_KEY_STR);
+            verifyResult = SignUtil.verify(map.toString(),signatureByte, PUBLIC_KEY_STR);
             if (verifyResult == false) throw new MyException("验签失败");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

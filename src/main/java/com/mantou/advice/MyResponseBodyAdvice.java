@@ -2,7 +2,6 @@ package com.mantou.advice;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mantou.anno.SignProcess;
-import com.mantou.entity.DemoSign;
 import com.mantou.entity.Response;
 import com.mantou.utils.JsonUtil;
 import com.mantou.utils.SignUtil;
@@ -14,6 +13,8 @@ import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+import sun.misc.BASE64Encoder;
+
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -49,7 +50,7 @@ public class MyResponseBodyAdvice implements ResponseBodyAdvice {
                         Iterator<Map.Entry<String, JsonNode>> fields = json.fields();
                         while(fields.hasNext()){
                             Map.Entry<String, JsonNode> entry = fields.next();
-                            if (entry.getKey() != "signatureByte")
+                            if (entry.getKey() != "signature")
                             map.put(entry.getKey(), JsonUtil.toStr(entry.getValue()));
                         }
                         log.info("map:{}",map.toString());
@@ -67,12 +68,13 @@ public class MyResponseBodyAdvice implements ResponseBodyAdvice {
                         } catch (SignatureException e) {
                             e.printStackTrace();
                         }
-                        int[] signInt = new int[signByte.length];
-                        for (int i = 0; i < signByte.length; i++) {
-                            signInt[i] = signByte[i];
-                        }
+                        String encodeSign = new BASE64Encoder().encode(signByte);
+//                        int[] signInt = new int[signByte.length];
+//                        for (int i = 0; i < signByte.length; i++) {
+//                            signInt[i] = signByte[i];
+//                        }
                         //TODO
-                        map.put("signatureByte",signInt);
+                        map.put("signature",encodeSign);
                         return Response.success(map);
                     }
 
