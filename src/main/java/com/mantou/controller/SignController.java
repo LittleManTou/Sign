@@ -6,7 +6,6 @@ import com.mantou.entity.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @RestController
 @RequestMapping("/test")
@@ -15,7 +14,7 @@ public class SignController {
     @SignProcess
     @PostMapping("/verify")
     public Response verify(@RequestBody DemoReq demoReq){
-        demoReq.setName("lisi");
+        demoReq.setName("wangwu");
         return Response.success(demoReq);
     }
 }
