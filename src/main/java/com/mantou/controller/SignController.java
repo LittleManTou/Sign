@@ -15,7 +15,6 @@ public class SignController {
     @SignProcess
     @PostMapping("/verify")
     public Response verify(@RequestBody DemoReq demoReq){
-        //log.info("signatureByte:{}",data.get("signatureByte"));
         demoReq.setName("lisi");
         return Response.success(demoReq);
     }
