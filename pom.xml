@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.mantou</groupId>
     <artifactId>springboot_sign</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>sign</version>
     <name>springboot_sign</name>
     <description>Demo project for Spring Boot Sign</description>
     <properties>
@@ -57,6 +57,11 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
