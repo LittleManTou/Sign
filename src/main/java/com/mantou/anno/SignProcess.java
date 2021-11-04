@@ -13,13 +13,11 @@ import java.lang.annotation.*;
 public @interface SignProcess {
     /**
      * 请求参数是否验签
-     * @return
      */
     boolean verify() default true ;
 
     /**
      * 响应参数是否加签
-     * @return
      */
     boolean sign() default true ;
 }
