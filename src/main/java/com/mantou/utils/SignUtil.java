@@ -3,6 +3,7 @@ package com.mantou.utils;
 import sun.misc.BASE64Decoder;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -10,12 +11,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 public class SignUtil {
     /**
      * 加签方法
-     * @param plain
-     * @return
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeyException
-     * @throws UnsupportedEncodingException
-     * @throws SignatureException
      */
     public static byte[] sign(String plain,String privateKeyStr) throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException, SignatureException {
         //根据对应算法，获取签名对象实例
@@ -25,21 +20,13 @@ public class SignUtil {
         //初始化签名对象
         signature.initSign(privateKey);
         //把原始报文更新到对象
-        signature.update(plain.getBytes("UTF-8"));
+        signature.update(plain.getBytes(StandardCharsets.UTF_8));
         //加签
         return signature.sign();
     }
 
     /**
      * 验签方法
-     * @param plain
-     * @param signatureByte
-     * @return
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeyException
-     * @throws IOException
-     * @throws SignatureException
-     * @throws InvalidKeySpecException
      */
     public static boolean verify(String plain, byte[] signatureByte,String publicKeyStr) throws NoSuchAlgorithmException, InvalidKeyException, IOException, SignatureException, InvalidKeySpecException {
         //获取公钥
@@ -49,7 +36,7 @@ public class SignUtil {
         //初始化签名对象
         signature.initVerify(publicKey);
         //把原始报文更新到签名对象
-        signature.update(plain.getBytes("UTF-8"));
+        signature.update(plain.getBytes(StandardCharsets.UTF_8));
         //进行验签
         return signature.verify(signatureByte);
     }

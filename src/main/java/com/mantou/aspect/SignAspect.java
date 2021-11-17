@@ -42,7 +42,7 @@
 //    private String PUBLIC_KEY_STR;
 //
 //    //验证数字签名
-//    @Before("SignProecssPointCut(signProcess)")
+//    @Before(value = "SignProecssPointCut(signProcess)", argNames = "joinPoint,signProcess")
 //    public void doVerify(JoinPoint joinPoint,SignProcess signProcess) throws IOException {
 //        Object obj = joinPoint.getArgs()[0];
 //        //是否开启校验数字签名
@@ -62,13 +62,7 @@
 //                try {
 //                     verify = SignUtil.verify(data.toString(), signatureBytes, PUBLIC_KEY_STR);
 //                    if (!verify) throw new MyException("验签失败");
-//                } catch (NoSuchAlgorithmException e) {
-//                    e.printStackTrace();
-//                } catch (InvalidKeyException e) {
-//                    e.printStackTrace();
-//                } catch (SignatureException e) {
-//                    e.printStackTrace();
-//                } catch (InvalidKeySpecException e) {
+//                } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException | InvalidKeySpecException e) {
 //                    e.printStackTrace();
 //                }
 //            }else{
@@ -82,28 +76,22 @@
 //    private String PRIVATE_KEY_STR;
 //
 //    //对响应数据加上数字签名
-//    @After("SignProecssPointCut(signProcess)")
+//    @After(value = "SignProecssPointCut(signProcess)", argNames = "joinPoint,signProcess")
 //    public void doSign(JoinPoint joinPoint ,SignProcess signProcess){
 //        Object obj = joinPoint.getArgs()[0];
 //        if (signProcess.sign()){
 //            if (obj instanceof DemoSign){
 //                DemoSign demoSign = (DemoSign) obj ;
-//                log.info("damoSign:{}",demoSign);
+//                log.info("demoSign:{}",demoSign);
 //                LinkedHashMap<String, Object> data = ClazzUtil.getData(obj);
 //                log.info("dataRes:{}",data.toString());
 //                //添加数字签名
 //                try {
 //                    byte[] signatureBytes = SignUtil.sign(data.toString(), PRIVATE_KEY_STR);
 //                    String signature  = new BASE64Encoder().encode(signatureBytes);
-//                    log.info("signatrue:{}",signature);
+//                    log.info("signature:{}",signature);
 //                    demoSign.setSignature(signature);
-//                } catch (NoSuchAlgorithmException e) {
-//                    e.printStackTrace();
-//                } catch (InvalidKeyException e) {
-//                    e.printStackTrace();
-//                } catch (UnsupportedEncodingException e) {
-//                    e.printStackTrace();
-//                } catch (SignatureException e) {
+//                } catch (NoSuchAlgorithmException | InvalidKeyException | UnsupportedEncodingException | SignatureException e) {
 //                    e.printStackTrace();
 //                }
 //            }else{

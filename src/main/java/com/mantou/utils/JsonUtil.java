@@ -78,9 +78,4 @@ public class JsonUtil {
         }
         return read(toStr(obj));
     }
-
-    public static void main(String[] args) {
-        JsonNode x = new TextNode(String.valueOf("fwfwefewf"));
-        System.out.println(x.asText());
-    }
 }

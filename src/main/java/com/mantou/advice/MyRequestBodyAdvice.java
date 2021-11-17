@@ -21,12 +21,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.*;
+import java.util.LinkedHashMap;
 
 @Slf4j
 @ControllerAdvice
@@ -45,7 +45,7 @@ public class MyRequestBodyAdvice implements RequestBodyAdvice {
     public HttpInputMessage beforeBodyRead(HttpInputMessage httpInputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
         HttpHeaders headers = httpInputMessage.getHeaders();
         //源请求参数
-        String bodyStr = StreamUtils.copyToString(httpInputMessage.getBody(), Charset.forName("utf-8"));
+        String bodyStr = StreamUtils.copyToString(httpInputMessage.getBody(), StandardCharsets.UTF_8);
         //转换成TreeMap结构
         LinkedHashMap<String,Object> map = JsonUtil.parse(bodyStr, new TypeReference<LinkedHashMap<String, Object>>() {});
         //将编码的数字签名取出
@@ -60,18 +60,12 @@ public class MyRequestBodyAdvice implements RequestBodyAdvice {
         boolean verifyResult;
         try {
             verifyResult = SignUtil.verify(map.toString(),signatureByte, PUBLIC_KEY_STR);
-            if (verifyResult == false) throw new MyException("验签失败");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (SignatureException e) {
-            e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
+            if (!verifyResult) throw new MyException("验签失败");
+        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException | InvalidKeySpecException e) {
             e.printStackTrace();
         }
         String outStr = JsonUtil.toStr(map);
-        return new MyHttpInputMessage(headers, outStr.getBytes(Charset.forName("utf-8")));
+        return new MyHttpInputMessage(headers, outStr.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
@@ -87,12 +81,12 @@ public class MyRequestBodyAdvice implements RequestBodyAdvice {
     @AllArgsConstructor
     public static class MyHttpInputMessage implements HttpInputMessage {
 
-        private HttpHeaders headers;
+        private final HttpHeaders headers;
 
-        private byte[] body;
+        private final byte[] body;
 
         @Override
-        public InputStream getBody() throws IOException {
+        public InputStream getBody() {
             return new ByteArrayInputStream(body);
         }
 

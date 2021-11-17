@@ -22,7 +22,6 @@ import java.security.SignatureException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 @ControllerAdvice
 @Slf4j
@@ -60,13 +59,7 @@ public class MyResponseBodyAdvice implements ResponseBodyAdvice {
                         try {
                             signByte = SignUtil.sign(map.toString(), PRIVATE_KEY_STR);
                             log.info("sign:{}", signByte);
-                        } catch (NoSuchAlgorithmException e) {
-                            e.printStackTrace();
-                        } catch (InvalidKeyException e) {
-                            e.printStackTrace();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        } catch (SignatureException e) {
+                        } catch (NoSuchAlgorithmException | InvalidKeyException | UnsupportedEncodingException | SignatureException e) {
                             e.printStackTrace();
                         }
                         String encodeSign = new BASE64Encoder().encode(signByte);

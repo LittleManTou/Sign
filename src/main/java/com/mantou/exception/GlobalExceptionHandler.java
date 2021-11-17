@@ -15,10 +15,10 @@ public class GlobalExceptionHandler {
     /**
      * 处理Exceptionn异常
      * @param e
-     * @return
+     * @return Response
      */
     @ExceptionHandler(Exception.class)
-    public Response handleException(Exception e) {
+    public Response<String> handleException(Exception e) {
         print(e);
         String message = e.getMessage();
         if (null == message || "".equals(message)) {
