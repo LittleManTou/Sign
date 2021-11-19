@@ -5,9 +5,9 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class DemoReq  extends  DemoSign{
+public class DemoReq  extends MySign {
     Integer id ;
     String name ;
     Integer age ;
-    String desc ;              //描述,将描述内容作为原始报文
+    String desc ;
 }
