@@ -14,9 +14,9 @@ public class SignController {
 
     @SignProcess
     @PostMapping("/verify")
+
     public Response<DemoReq> verify(@RequestBody DemoReq demoReq){
-        demoReq.setName("mantou");
+        demoReq.setName("馒头");
         return Response.success(demoReq);
     }
-
 }

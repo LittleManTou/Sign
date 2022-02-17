@@ -82,7 +82,7 @@ public class SignAspect {
         if (signProcess.sign()){
             if (obj instanceof MySign){
                 MySign mySign = (MySign) obj ;
-                log.info("demoSign:{}", mySign);
+                log.info("mySign:{}", mySign);
                 LinkedHashMap<String, Object> data = ClazzUtil.getData(obj);
                 log.info("dataRes:{}",data.toString());
                 //添加数字签名
